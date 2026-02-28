@@ -7,8 +7,15 @@ package frc.robot;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoDrive;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Launch;
+import frc.robot.subsystems.CANDriveSubsystem;
+import frc.robot.subsystems.CANFuelSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +31,18 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private static final String kDefaultAuto = "Default";
+  private static final String kDriveForward = "Drive Forward";
+  private static final String kMiddleScore = "Middle Score";
+  private static final String kCornerScore = "Corner Score";
+  private static final String kCollectFuelL = "Collect Fuel Left";
+  private static final String kCollectFuelR = "Collect Fuel Right";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_Chooser = new SendableChooser<>();
+
+  private CANDriveSubsystem driveSubsystem; CANFuelSubsystem ballSubsystem;
+
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -38,6 +57,14 @@ public class Robot extends TimedRobot {
 
     // Used to track usage of Kitbot code, please do not remove.
     HAL.report(tResourceType.kResourceType_Framework, 10);
+
+    m_Chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_Chooser.addOption("Drive Forward", kDriveForward);
+    m_Chooser.addOption("Middle Score", kMiddleScore);
+    m_Chooser.addOption("Corner Score", kCornerScore);
+    m_Chooser.addOption("Collect Fuel Left", kCollectFuelL);
+    m_Chooser.addOption("Collect Fuel Right", kCollectFuelR);
+    SmartDashboard.putData("Auto Choices", m_Chooser);
   }
 
   /**
@@ -77,17 +104,43 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autoSelected = m_Chooser.getSelected();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-     CommandScheduler.getInstance().schedule(m_autonomousCommand);
+    System.out.println("Auto selected: " + m_autoSelected);
+
     }
-  }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+      if (m_autoSelected == kDefaultAuto){
+        new AutoDrive(driveSubsystem,0,  0.0);
+      }
+
+      else if (m_autoSelected == kDriveForward){
+        new AutoDrive(driveSubsystem,0.5,  0.0).withTimeout(.5);
+      }
+
+      else if (m_autoSelected == kMiddleScore){
+        new AutoDrive(driveSubsystem,0.5,  0.0).withTimeout(.5);
+        new Launch(ballSubsystem).withTimeout(30);
+      }
+
+      else if (m_autoSelected == kCornerScore){
+        new AutoDrive(driveSubsystem,0.5,  0.0).withTimeout(.5);
+        new Launch(ballSubsystem).withTimeout(30);
+      }
+      else if (m_autoSelected == kCollectFuelL){
+        new AutoDrive(driveSubsystem,0.6,  0.1).withTimeout(30);
+        new Intake(ballSubsystem).withTimeout(30);
+      }
+      else if (m_autoSelected == kCollectFuelR){
+        new AutoDrive(driveSubsystem,0.6,  -0.1).withTimeout(30);
+        new Intake(ballSubsystem).withTimeout(30);
+      }
+
+
+new AutoDrive(driveSubsystem,0.5,  0.0).withTimeout(.25);
   }
 
   @Override
