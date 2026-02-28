@@ -42,21 +42,21 @@ public class CANFuelSubsystem extends SubsystemBase {
     // all commands using this subsystem pull values from the dashbaord to allow
     // you to tune the values easily, and then replace the values in Constants.java
     // with your new values. For more information, see the Software Guide.
-    SmartDashboard.putNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE);
-    SmartDashboard.putNumber("Intaking intake roller value", INTAKING_INTAKE_VOLTAGE);
-    SmartDashboard.putNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE);
-    SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE);
-    SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE);
+    SmartDashboard.putNumber("Intaking feeder roller value", INTAKING_FEEDER_SPEED);
+    SmartDashboard.putNumber("Intaking intake roller value", INTAKING_INTAKE_SPEED);
+    SmartDashboard.putNumber("Launching feeder roller value", LAUNCHING_FEEDER_SPEED);
+    SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_SPEED);
+    SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_SPEED);
   }
 
   // A method to set the voltage of the intake roller
-  public void setIntakeLauncherRoller(double voltage) {
-    intakeLauncherRoller.setVoltage(voltage);
+  public void setIntakeLauncherRoller(double speed) {
+    intakeLauncherRoller.set(speed);
   }
 
   // A method to set the voltage of the intake roller
-  public void setFeederRoller(double voltage) {
-    feederRoller.setVoltage(voltage);
+  public void setFeederRoller(double speed) {
+    feederRoller.set(speed);
   }
 
   // A method to stop the rollers
