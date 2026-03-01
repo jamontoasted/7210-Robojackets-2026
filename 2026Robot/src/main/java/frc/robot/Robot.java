@@ -130,17 +130,17 @@ public class Robot extends TimedRobot {
         new AutoDrive(driveSubsystem,0.5,  0.0).withTimeout(.5);
         new Launch(ballSubsystem).withTimeout(30);
       }
+
       else if (m_autoSelected == kCollectFuelL){
         new AutoDrive(driveSubsystem,0.6,  0.1).withTimeout(30);
         new Intake(ballSubsystem).withTimeout(30);
       }
+
       else if (m_autoSelected == kCollectFuelR){
         new AutoDrive(driveSubsystem,0.6,  -0.1).withTimeout(30);
         new Intake(ballSubsystem).withTimeout(30);
       }
 
-
-new AutoDrive(driveSubsystem,0.5,  0.0).withTimeout(.25);
   }
 
   @Override
