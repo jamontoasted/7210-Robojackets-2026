@@ -30,10 +30,10 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  private final SparkMax leftDriveLead = new SparkMax(1,MotorType.kBrushed);
-  private final SparkMax leftDriveFollow = new SparkMax(2,MotorType.kBrushed);
-  private final SparkMax rightDriveLead = new SparkMax(3,MotorType.kBrushed);
-  private final SparkMax rightDriveFollow = new SparkMax(4,MotorType.kBrushed);
+  private final SparkMax leftDriveLead = new SparkMax(3,MotorType.kBrushed);
+  private final SparkMax leftDriveFollow = new SparkMax(4,MotorType.kBrushed);
+  private final SparkMax rightDriveLead = new SparkMax(1,MotorType.kBrushed);
+  private final SparkMax rightDriveFollow = new SparkMax(2,MotorType.kBrushed);
 
   private final SparkMax intakeLauncher = new SparkMax(5, MotorType.kBrushless);
   private final SparkMax feeder = new SparkMax(6, MotorType.kBrushless);
@@ -85,7 +85,7 @@ private static final double STEER_MODIFIER = 2;
     rightDriveFollow.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     driveConfig.disableFollowerMode();
-    driveConfig.inverted(false);
+    driveConfig.inverted(true);
     leftDriveLead.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     driveConfig.disableFollowerMode();
@@ -207,7 +207,7 @@ private static final double STEER_MODIFIER = 2;
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    drive.arcadeDrive(Math.pow(DRIVE_INPUT, DRIVE_MODIFIER), Math.pow(STEER_INPUT, STEER_MODIFIER) *.8);
+    drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .7);
 
       if (controller.getLeftBumperButton()){// Intake
         intakeLauncher.set(INTAKING_INTAKE_SPEED);
