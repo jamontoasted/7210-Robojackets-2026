@@ -56,12 +56,6 @@ private static final double SPIN_UP_FEEDER_SPEED = 0.5;
 private static final double SPIN_UP_SECONDS = 0.5;
 
 
-private double DRIVE_INPUT = controller.getLeftY();
-private double STEER_INPUT = controller.getRightX();
-private static final double DRIVE_MODIFIER = 2;
-private static final double STEER_MODIFIER = 2;
-
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -150,9 +144,9 @@ private static final double STEER_MODIFIER = 2;
 
       case kMidScore:
         // Put custom auto code here
-      if (autoTimer.get() < 1.75){
+      if (autoTimer.get() < 1){
         drive.arcadeDrive(.5, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
       else if (autoTimer.get() < 10){

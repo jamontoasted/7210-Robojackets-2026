@@ -39,11 +39,11 @@ public final class Constants {
     // Voltage values for various fuel operations. These values may need to be tuned
     // based on exact robot construction.
     // See the Software Guide for tuning information
-    public static final double INTAKING_FEEDER_SPEED = 1;
-    public static final double INTAKING_INTAKE_SPEED = -0.5;
-    public static final double LAUNCHING_FEEDER_SPEED = -1;
-    public static final double LAUNCHING_LAUNCHER_SPEED = -1;
-    public static final double SPIN_UP_FEEDER_SPEED = 0.5;
+    public static final double INTAKING_FEEDER_SPEED = -1;
+    public static final double INTAKING_INTAKE_SPEED = 0.6;
+    public static final double LAUNCHING_FEEDER_SPEED = 1;
+    public static final double LAUNCHING_LAUNCHER_SPEED = 1;
+    public static final double SPIN_UP_FEEDER_SPEED = -0.5;
     public static final double SPIN_UP_SECONDS = 0.5;
   }
 
@@ -55,7 +55,7 @@ public final class Constants {
 
     // This value is multiplied by the joystick value when rotating the robot to
     // help avoid turning too fast and beign difficult to control
-    public static final double DRIVE_SCALING = 1;
-    public static final double ROTATION_SCALING = .7;
+    public static final double DRIVE_SCALING = .7;
+    public static final double ROTATION_SCALING = .8;
   }
 }
