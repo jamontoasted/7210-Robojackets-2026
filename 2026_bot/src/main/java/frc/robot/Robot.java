@@ -49,9 +49,9 @@ public class Robot extends TimedRobot {
 private static final double INTAKING_INTAKE_SPEED = 0.6;
 private static final double INTAKING_FEEDER_SPEED = 1;
 
-private static final double LAUNCHING_INTAKE_SPEED = 1;
+private static final double LAUNCHING_INTAKE_SPEED = 0.9;
 private static final double LAUNCHING_FEEDER_SPEED = -1;
-
+private static final double SLOW_LAUNCHING_INTAKE_SPEED = 0.7;
 private static final double SPIN_UP_FEEDER_SPEED = 0.5;
 private static final double SPIN_UP_SECONDS = 0.5;
 
@@ -150,12 +150,12 @@ private static final double STEER_MODIFIER = 2;
 
       case kMidScore:
         // Put custom auto code here
-      if (autoTimer.get() < 1){
+      if (autoTimer.get() < 1.75){
         drive.arcadeDrive(.5, 0);
         intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
-      else if (autoTimer.get() < 9){
+      else if (autoTimer.get() < 10){
         drive.arcadeDrive(0, 0);
         intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
@@ -207,9 +207,14 @@ private static final double STEER_MODIFIER = 2;
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .7);
+    if (controller.getRightStickButton()){
+    drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .6);
+    }
+    else {
+      drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .8);
+    }
 
-      if (controller.getLeftBumperButton()){// Intake
+      if (controller.getLeftTriggerAxis() > 0.2){// Intake
         intakeLauncher.set(INTAKING_INTAKE_SPEED);
         feeder.set(INTAKING_FEEDER_SPEED);
       }
@@ -223,6 +228,19 @@ private static final double STEER_MODIFIER = 2;
       }
       else {
         intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        feeder.set(LAUNCHING_FEEDER_SPEED);
+      }
+    }
+    else if (controller.getLeftBumperButton()){// Slow launch
+      if(controller.getLeftBumperButtonPressed()){
+        spinUpTimer.reset();
+      }
+      if (spinUpTimer.get() < SPIN_UP_SECONDS){
+        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
+        feeder.set(SPIN_UP_FEEDER_SPEED);
+      }
+      else {
+        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
     }
