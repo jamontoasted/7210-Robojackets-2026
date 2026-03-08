@@ -163,22 +163,27 @@ private static final double SPIN_UP_SECONDS = 0.5;
 
       case kLScoreCollect:
       if (autoTimer.get() < 0.8){
-        drive.arcadeDrive(.5, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        drive.arcadeDrive(0, 0);
+        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
-      else if (autoTimer.get() < 8.8){
+      else if (autoTimer.get() < 9){
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
-      else if (autoTimer.get() < 8.8 + .8){
-        drive.arcadeDrive(0, .5);
+      else if (autoTimer.get() < 9 + .8){
+        drive.arcadeDrive(.5, 0);
+        intakeLauncher.set(0);
+        feeder.set(0);
+      }
+      else if (autoTimer.get() < 9 + .8 + .8){
+        drive.arcadeDrive(0, 0.5);
         intakeLauncher.set(0);
         feeder.set(0);
       }
       else if (autoTimer.get() < 8.8 + .8 + 8){
-        drive.arcadeDrive(.8, 0);
+        drive.arcadeDrive(0.8, 0);
         intakeLauncher.set(INTAKING_INTAKE_SPEED);
         feeder.set(INTAKING_FEEDER_SPEED);
       }
@@ -202,7 +207,7 @@ private static final double SPIN_UP_SECONDS = 0.5;
   @Override
   public void teleopPeriodic() {
     if (controller.getRightStickButton()){
-    drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .6);
+    drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .5);
     }
     else {
       drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX() * .8);
