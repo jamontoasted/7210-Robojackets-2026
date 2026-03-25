@@ -49,11 +49,11 @@ public class Robot extends TimedRobot {
 private static final double INTAKING_INTAKE_SPEED = 0.6;
 private static final double INTAKING_FEEDER_SPEED = 1;
 
-private static final double LAUNCHING_INTAKE_SPEED = 0.9;
-private static final double LAUNCHING_FEEDER_SPEED = -1;
+private static final double LAUNCHING_INTAKE_SPEED = 1;
+private static final double LAUNCHING_FEEDER_SPEED = -0.5;
 private static final double SLOW_LAUNCHING_INTAKE_SPEED = 0.7;
 private static final double SPIN_UP_FEEDER_SPEED = 0.5;
-private static final double SPIN_UP_SECONDS = 0.5;
+private static final double SPIN_UP_SECONDS = 2;
 
 
   /**
@@ -144,9 +144,9 @@ private static final double SPIN_UP_SECONDS = 0.5;
 
       case kMidScore:
         // Put custom auto code here
-      if (autoTimer.get() < 1){
+      if (autoTimer.get() < 1.75){
         drive.arcadeDrive(.5, 0);
-        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
+        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
       else if (autoTimer.get() < 10){
@@ -154,35 +154,40 @@ private static final double SPIN_UP_SECONDS = 0.5;
         intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
-      else {
+      else if (autoTimer.get() < 11){
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(0);
-        feeder.set(0);
+        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        feeder.set(SPIN_UP_FEEDER_SPEED);
+      }
+      else {
+       drive.arcadeDrive(0, 0);
+        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        feeder.set(LAUNCHING_FEEDER_SPEED);
       }
         break;
 
       case kLScoreCollect:
-      if (autoTimer.get() < 0.8){
-        drive.arcadeDrive(0, 0);
-        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
+      if (autoTimer.get() < 1.5){
+        drive.arcadeDrive(0.5, 0);
+        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
-      else if (autoTimer.get() < 9){
+      else if (autoTimer.get() < 10){
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
+        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
-      else if (autoTimer.get() < 9 + .8){
+      else if (autoTimer.get() < 10 + 1.5){
         drive.arcadeDrive(.5, 0);
         intakeLauncher.set(0);
         feeder.set(0);
       }
-      else if (autoTimer.get() < 9 + .8 + .8){
+      else if (autoTimer.get() < 10 + 1.5 + .8){
         drive.arcadeDrive(0, 0.5);
         intakeLauncher.set(0);
         feeder.set(0);
       }
-      else if (autoTimer.get() < 8.8 + .8 + 8){
+      else if (autoTimer.get() < 11.5 + .8 + 2){
         drive.arcadeDrive(0.8, 0);
         intakeLauncher.set(INTAKING_INTAKE_SPEED);
         feeder.set(INTAKING_FEEDER_SPEED);
