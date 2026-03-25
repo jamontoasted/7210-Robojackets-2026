@@ -35,8 +35,9 @@ public class Robot extends TimedRobot {
   private final SparkMax rightDriveLead = new SparkMax(1,MotorType.kBrushed);
   private final SparkMax rightDriveFollow = new SparkMax(2,MotorType.kBrushed);
 
-  private final SparkMax intakeLauncher = new SparkMax(5, MotorType.kBrushless);
+  private final SparkMax intake = new SparkMax(5, MotorType.kBrushless);
   private final SparkMax feeder = new SparkMax(6, MotorType.kBrushless);
+  private final SparkMax launcher = new SparkMax(7, MotorType.KBrushless);
 
   private final DifferentialDrive drive = new DifferentialDrive(leftDriveLead, rightDriveLead);
 
@@ -86,11 +87,11 @@ private static final double SPIN_UP_SECONDS = 2;
     driveConfig.inverted(false);
     rightDriveLead.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-// fuel motor configuration:
+// motor configuration:
     SparkMaxConfig launcherConfig = new SparkMaxConfig();
     launcherConfig.smartCurrentLimit(60);
     launcherConfig.inverted(false);
-    intakeLauncher.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    intake.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig feederConfig = new SparkMaxConfig();
     launcherConfig.smartCurrentLimit(60);
@@ -146,22 +147,22 @@ private static final double SPIN_UP_SECONDS = 2;
         // Put custom auto code here
       if (autoTimer.get() < 1.75){
         drive.arcadeDrive(.5, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
       else if (autoTimer.get() < 10){
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
       else if (autoTimer.get() < 11){
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
       else {
        drive.arcadeDrive(0, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
         break;
@@ -169,32 +170,32 @@ private static final double SPIN_UP_SECONDS = 2;
       case kLScoreCollect:
       if (autoTimer.get() < 1.5){
         drive.arcadeDrive(0.5, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
       }
       else if (autoTimer.get() < 10){
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
       }
       else if (autoTimer.get() < 10 + 1.5){
         drive.arcadeDrive(.5, 0);
-        intakeLauncher.set(0);
+        intake.set(0);
         feeder.set(0);
       }
       else if (autoTimer.get() < 10 + 1.5 + .8){
         drive.arcadeDrive(0, 0.5);
-        intakeLauncher.set(0);
+        intake.set(0);
         feeder.set(0);
       }
       else if (autoTimer.get() < 11.5 + .8 + 2){
         drive.arcadeDrive(0.8, 0);
-        intakeLauncher.set(INTAKING_INTAKE_SPEED);
+        intake.set(INTAKING_INTAKE_SPEED);
         feeder.set(INTAKING_FEEDER_SPEED);
       }
       else {
         drive.arcadeDrive(0, 0);
-        intakeLauncher.set(0);
+        intake.set(0);
         feeder.set(0);
       }
 
