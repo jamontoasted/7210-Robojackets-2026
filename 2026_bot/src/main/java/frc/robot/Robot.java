@@ -13,8 +13,10 @@ import edu.wpi.first.wpilibj.XboxController;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 /**
@@ -37,7 +39,7 @@ public class Robot extends TimedRobot {
 
   private final SparkMax intake = new SparkMax(5, MotorType.kBrushless);
   private final SparkMax feeder = new SparkMax(6, MotorType.kBrushless);
-  private final SparkMax launcher = new SparkMax(7, MotorType.KBrushless);
+  private final SparkFlex launcher = new SparkFlex(7, MotorType.kBrushless);
 
   private final DifferentialDrive drive = new DifferentialDrive(leftDriveLead, rightDriveLead);
 
@@ -49,12 +51,15 @@ public class Robot extends TimedRobot {
 // fuel system constants:
 private static final double INTAKING_INTAKE_SPEED = 0.6;
 private static final double INTAKING_FEEDER_SPEED = 1;
+private static final double INTAKING_LAUNCHER_SPEED = -0.3;
 
-private static final double LAUNCHING_INTAKE_SPEED = 1;
+private static final double LAUNCHING_INTAKE_SPEED = 0.8;
 private static final double LAUNCHING_FEEDER_SPEED = -0.5;
-private static final double SLOW_LAUNCHING_INTAKE_SPEED = 0.7;
+private static final double LAUNCHING_LAUNCHER_SPEED = 0.9;
+private static final double SLOW_LAUNCHING_LAUNCHER_SPEED = 0.7;
+
 private static final double SPIN_UP_FEEDER_SPEED = 0.5;
-private static final double SPIN_UP_SECONDS = 2;
+private static final double SPIN_UP_SECONDS = 1.5;
 
 
   /**
@@ -88,14 +93,19 @@ private static final double SPIN_UP_SECONDS = 2;
     rightDriveLead.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 // motor configuration:
-    SparkMaxConfig launcherConfig = new SparkMaxConfig();
-    launcherConfig.smartCurrentLimit(60);
-    launcherConfig.inverted(false);
-    intake.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    SparkMaxConfig intakeConfig = new SparkMaxConfig();
+    intakeConfig.smartCurrentLimit(60);
+    intakeConfig.inverted(false);
+    intake.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig feederConfig = new SparkMaxConfig();
-    launcherConfig.smartCurrentLimit(60);
+    feederConfig.smartCurrentLimit(60);
     feeder.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    SparkFlexConfig launcherConfig = new SparkFlexConfig();
+    launcherConfig.smartCurrentLimit(60);
+    launcherConfig.inverted(false);
+    launcher.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   /**
@@ -149,21 +159,25 @@ private static final double SPIN_UP_SECONDS = 2;
         drive.arcadeDrive(.5, 0);
         intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
+        launcher.set(LAUNCHING_LAUNCHER_SPEED);
       }
       else if (autoTimer.get() < 10){
         drive.arcadeDrive(0, 0);
         intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
+        launcher.set(LAUNCHING_LAUNCHER_SPEED);
       }
       else if (autoTimer.get() < 11){
         drive.arcadeDrive(0, 0);
         intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
+        launcher.set(LAUNCHING_LAUNCHER_SPEED);
       }
       else {
        drive.arcadeDrive(0, 0);
         intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
+        launcher.set(LAUNCHING_LAUNCHER_SPEED);
       }
         break;
 
@@ -220,20 +234,23 @@ private static final double SPIN_UP_SECONDS = 2;
     }
 
       if (controller.getLeftTriggerAxis() > 0.2){// Intake
-        intakeLauncher.set(INTAKING_INTAKE_SPEED);
+        intake.set(INTAKING_INTAKE_SPEED);
         feeder.set(INTAKING_FEEDER_SPEED);
+        launcher.set(INTAKING_LAUNCHER_SPEED);
       }
     else if (controller.getRightBumperButton()){// Launch
       if(controller.getRightBumperButtonPressed()){
         spinUpTimer.reset();
       }
       if (spinUpTimer.get() < SPIN_UP_SECONDS){
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
+        launcher.set(LAUNCHING_LAUNCHER_SPEED);
       }
       else {
-        intakeLauncher.set(LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
+        launcher.set(LAUNCHING_LAUNCHER_SPEED);
       }
     }
     else if (controller.getLeftBumperButton()){// Slow launch
@@ -241,21 +258,24 @@ private static final double SPIN_UP_SECONDS = 2;
         spinUpTimer.reset();
       }
       if (spinUpTimer.get() < SPIN_UP_SECONDS){
-        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(SPIN_UP_FEEDER_SPEED);
+        launcher.set(SLOW_LAUNCHING_LAUNCHER_SPEED);
       }
       else {
-        intakeLauncher.set(SLOW_LAUNCHING_INTAKE_SPEED);
+        intake.set(LAUNCHING_INTAKE_SPEED);
         feeder.set(LAUNCHING_FEEDER_SPEED);
+        launcher.set(SLOW_LAUNCHING_LAUNCHER_SPEED);
       }
     }
     else if (controller.getAButton()){// Eject
-      intakeLauncher.set(-INTAKING_INTAKE_SPEED);
+      intake.set(-INTAKING_INTAKE_SPEED);
       feeder.set(-INTAKING_FEEDER_SPEED);
     }
     else {// Off
-      intakeLauncher.set(0);
+      intake.set(0);
       feeder.set(0);
+      launcher.set(0);
     }
 
   }
