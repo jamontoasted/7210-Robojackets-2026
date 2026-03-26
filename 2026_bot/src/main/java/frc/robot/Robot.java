@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
   private final SparkMax intake = new SparkMax(5, MotorType.kBrushless);
   private final SparkMax feeder = new SparkMax(6, MotorType.kBrushless);
   private final SparkFlex launcher = new SparkFlex(7, MotorType.kBrushless);
+  private final SparkMax hopper = new SparkMax(8, MotorType.kBrushless);
 
   private final DifferentialDrive drive = new DifferentialDrive(leftDriveLead, rightDriveLead);
 
@@ -54,12 +55,14 @@ private static final double INTAKING_FEEDER_SPEED = 1;
 private static final double INTAKING_LAUNCHER_SPEED = -0.3;
 
 private static final double LAUNCHING_INTAKE_SPEED = 0.8;
-private static final double LAUNCHING_FEEDER_SPEED = -0.5;
-private static final double LAUNCHING_LAUNCHER_SPEED = 0.9;
-private static final double SLOW_LAUNCHING_LAUNCHER_SPEED = 0.7;
+private static final double LAUNCHING_FEEDER_SPEED = -1;
+private static final double LAUNCHING_LAUNCHER_SPEED = 0.8;
+private static final double SLOW_LAUNCHING_LAUNCHER_SPEED = 0.6;
 
 private static final double SPIN_UP_FEEDER_SPEED = 0.5;
 private static final double SPIN_UP_SECONDS = 1.5;
+
+private static final double HOPPER_MOTOR_SPEED = 0.5;
 
 
   /**
@@ -104,8 +107,13 @@ private static final double SPIN_UP_SECONDS = 1.5;
 
     SparkFlexConfig launcherConfig = new SparkFlexConfig();
     launcherConfig.smartCurrentLimit(60);
-    launcherConfig.inverted(false);
+    launcherConfig.inverted(true);
     launcher.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    SparkFlexConfig hopperConfig = new SparkFlexConfig();
+    hopperConfig.smartCurrentLimit(40);
+    hopperConfig.inverted(false);
+    hopper.configure(hopperConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   /**
@@ -268,14 +276,22 @@ private static final double SPIN_UP_SECONDS = 1.5;
         launcher.set(SLOW_LAUNCHING_LAUNCHER_SPEED);
       }
     }
-    else if (controller.getAButton()){// Eject
+    else if (controller.getXButton()){// Eject
       intake.set(-INTAKING_INTAKE_SPEED);
       feeder.set(-INTAKING_FEEDER_SPEED);
+      launcher.set(INTAKING_LAUNCHER_SPEED);
+    }
+    else if (controller.getAButton()){
+      hopper.set(HOPPER_MOTOR_SPEED);
+    }
+    else if (controller.getBButton()){
+      hopper.set(-HOPPER_MOTOR_SPEED);
     }
     else {// Off
       intake.set(0);
       feeder.set(0);
       launcher.set(0);
+      hopper .set(0);
     }
 
   }
